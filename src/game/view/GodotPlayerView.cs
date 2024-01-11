@@ -1,28 +1,32 @@
-using Godot;
-using presenter;
 using System;
+using Godot;
+using UmaOdisseiaBrasileira.game.Enums;
+using UmaOdisseiaBrasileira.game.model;
+using UmaOdisseiaBrasileira.game.presenter.view;
 
-public partial class GodotPlayerView : CharacterBody2D, PlayerView
+namespace UmaOdisseiaBrasileira.game.view;
+
+public partial class GodotPlayerView : CharacterBody2D, IPlayerView
 {
-	public event Action<PlayerView.Input> OnInput;
+	public event Action<PlayerViewInput> OnInput;
 	private const float Speed = 200.0f;
 	private const float AnimationSpeed = 5f;
-	private AnimatedSprite2D animation;
-	private string currentDirection;
-	private Vector2 velocity;
+	private AnimatedSprite2D _animation;
+	private string _currentDirection;
+	private Vector2 _velocity;
 
 	public override void _Ready()
 	{
-		this.animation = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
-		this.Turn(PlayerView.Direction.FRONT);
-		this.Stop();
+		_animation = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+		Turn(PlayerViewDirection.Front);
+		Stop();
 	}
 
 	public override void _Process(double delta)
 	{
 		if (Input.IsActionJustPressed("ui_shift"))
 		{
-			OnInput?.Invoke(PlayerView.Input.RUN);
+			OnInput?.Invoke(PlayerViewInput.Run);
 		}
 	}
 
@@ -30,71 +34,69 @@ public partial class GodotPlayerView : CharacterBody2D, PlayerView
 	{
 		if (Input.IsActionPressed("ui_right"))
 		{
-			OnInput?.Invoke(PlayerView.Input.RIGHT);
+			OnInput?.Invoke(PlayerViewInput.Right);
 		}
 		else if (Input.IsActionPressed("ui_left"))
 		{
-			OnInput?.Invoke(PlayerView.Input.LEFT);
+			OnInput?.Invoke(PlayerViewInput.Left);
 		}
 		else if (Input.IsActionPressed("ui_up"))
 		{
-			OnInput?.Invoke(PlayerView.Input.UP);
+			OnInput?.Invoke(PlayerViewInput.Up);
 		}
 		else if (Input.IsActionPressed("ui_down"))
 		{
-			OnInput?.Invoke(PlayerView.Input.DOWN);
+			OnInput?.Invoke(PlayerViewInput.Down);
 		}
 		else
 		{
-			OnInput?.Invoke(PlayerView.Input.NONE);
+			OnInput?.Invoke(PlayerViewInput.None);
 		}
 	}
 
-	public void Run(PlayerView.Direction direction)
+	public void Run(PlayerViewDirection direction)
 	{
-		this.Turn(direction);
-		this.Move(true);
-		this.animation.Play(this.currentDirection + "_Run", AnimationSpeed * 2);
+		Turn(direction);
+		Move(true);
+		_animation.Play(_currentDirection + "_Run", AnimationSpeed * 2);
 	}
 
-	public void Walk(PlayerView.Direction direction)
+	public void Walk(PlayerViewDirection direction)
 	{
-		this.Turn(direction);
-		this.Move(false);
-		this.animation.Play(this.currentDirection + "_Walk", AnimationSpeed);
+		Turn(direction);
+		Move(false);
+		_animation.Play(_currentDirection + "_Walk", AnimationSpeed);
 	}
 
 	public void Stop()
 	{
-		this.velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
-		this.velocity.Y = Mathf.MoveToward(Velocity.Y, 0, Speed);
-		Velocity = this.velocity;
+		_velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
+		_velocity.Y = Mathf.MoveToward(Velocity.Y, 0, Speed);
+		Velocity = _velocity;
 
-		this.animation.Play(this.currentDirection + "_Idle", AnimationSpeed);
+		_animation.Play(_currentDirection + "_Idle", AnimationSpeed);
 	}
 
-	public float[] GetPosition()
+	public Position GetPosition()
 	{
-		var position = GlobalPosition;
-		return new float[]{ position.X, position.Y };
+		return new Position(GlobalPosition.X, GlobalPosition.Y);
 	}
 
 	private void Move(bool isRunning)
 	{
-		this.velocity = Velocity;
+		_velocity = Velocity;
 		var direction = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
 
 		var speed = isRunning ? Speed * 2 : Speed;
-		velocity.X = direction.X * speed;
-		velocity.Y = direction.Y * speed;
+		_velocity.X = direction.X * speed;
+		_velocity.Y = direction.Y * speed;
 
-		Velocity = velocity;
+		Velocity = _velocity;
 		MoveAndSlide();
 	}
 
-	private void Turn(PlayerView.Direction direction)
+	private void Turn(PlayerViewDirection direction)
 	{
-		this.currentDirection = char.ToUpper(direction.ToString()[0]) + direction.ToString().Substring(1).ToLower();
+		_currentDirection = char.ToUpper(direction.ToString()[0]) + direction.ToString().Substring(1).ToLower();
 	}
-
 }

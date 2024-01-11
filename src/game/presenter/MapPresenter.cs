@@ -1,31 +1,32 @@
-namespace presenter;
+using UmaOdisseiaBrasileira.game.model;
+using UmaOdisseiaBrasileira.game.presenter.service;
+using UmaOdisseiaBrasileira.game.presenter.view;
 
-using model;
-using service;
+namespace UmaOdisseiaBrasileira.game.presenter;
 
 public class MapPresenter
 {
-	private readonly CameraService cameraService;
-	private readonly Map map;
-	private readonly MapView view;
+	private readonly ICameraService _cameraService;
+	private readonly Map _map;
+	private readonly IMapView _view;
 
-	public MapPresenter(CameraService cameraService, Map map, MapView view)
+	public MapPresenter(ICameraService cameraService, Map map, IMapView view)
 	{
-		this.map = map;
-		this.view = view;
-		this.cameraService = cameraService;
+		_map = map;
+		_view = view;
+		_cameraService = cameraService;
 	}
 
 	public void Start()
 	{
 		HandleResize();
-		this.view.OnResize += HandleResize;
+		_view.OnResize += HandleResize;
 	}
 
 	private void HandleResize()
 	{
-		var size = this.view.GetSize();
-		this.cameraService.SetLimits(size[0], size[1]);
+		var size = _view.GetSize();
+		_cameraService.SetLimits(size.Width, size.Height);
 	}
 
 }

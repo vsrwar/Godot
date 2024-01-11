@@ -1,50 +1,46 @@
-namespace model;
+using UmaOdisseiaBrasileira.game.Enums;
+
+namespace UmaOdisseiaBrasileira.game.model;
 
 public class Player
 {
-	private string name;
-	private bool stopped;
-	private bool running;
-	private Direction direction;
+	private string _name;
+	private bool _stopped;
+	private bool _running;
+	private PlayerDirection _direction;
 
 	public Player(string name)
 	{
-		this.name = name;
-		this.stopped = true;
-		this.direction = Direction.FRONT;
+		_name = name;
+		_stopped = true;
+		_direction = PlayerDirection.Front;
 	}
 
 	public void Walk()
 	{
-		this.stopped = false;
-		this.running = false;
+		_stopped = false;
+		_running = false;
 	}
 
 	public void Run()
 	{
-		this.stopped = false;
-		this.running = true;
+		_stopped = false;
+		_running = true;
 	}
 
 	public void Stop()
 	{
-		this.stopped = true;
-		this.running = false;
+		_stopped = true;
+		_running = false;
 	}
 
-	public void Turn(Direction direction)
+	public void Turn(PlayerDirection direction)
 	{
-		this.direction = direction;
+		_direction = direction;
 	}
 
 	public bool IsRunning()
 	{
-		return this.running;
+		return _running;
 	}
-
-	public enum Direction
-	{
-		FRONT, BACK, LEFT, RIGHT
-	}
-
 }

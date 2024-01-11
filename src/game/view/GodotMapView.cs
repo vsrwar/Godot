@@ -1,52 +1,55 @@
 using System;
 using Godot;
+using UmaOdisseiaBrasileira.game.model;
+using UmaOdisseiaBrasileira.game.presenter.view;
 
-using presenter;
+namespace UmaOdisseiaBrasileira.game.view;
 
-public partial class GodotMapView : TileMap, MapView
+public partial class GodotMapView : TileMap, IMapView
 {
 	[Export]
 	public NodePath PlayerPath { get; set; }
 
 	public event Action OnResize;
-	private Vector2 currentWindowSize, baseResolution;
+	private Vector2 _currentWindowSize;
+	private Vector2 _baseResolution;
+	
+	private const int TileSize = 64;
+	private const int DefaultLayer = 0;
 
 	public override void _Ready()
 	{
 		var currentSize = GetViewport().GetVisibleRect().Size;
-		this.currentWindowSize = currentSize;
-		this.baseResolution = currentSize;
+		_currentWindowSize = currentSize;
+		_baseResolution = currentSize;
 	}
 
 	public override void _Process(double delta)
 	{
 		var currentSize = GetViewport().GetVisibleRect().Size;
-		if (currentSize != this.currentWindowSize)
-		{
-			OnResize?.Invoke();
-			this.currentWindowSize = currentSize;
-		}
+		if (currentSize == _currentWindowSize) return;
+		OnResize?.Invoke();
+		_currentWindowSize = currentSize;
 	}
 
-	public float[] GetSize()
+	public Size GetSize()
 	{
-		int minX = int.MaxValue;
-		int minY = int.MaxValue;
-		int maxX = int.MinValue;
-		int maxY = int.MinValue;
+		var minX = int.MaxValue;
+		var minY = int.MaxValue;
+		var maxX = int.MinValue;
+		var maxY = int.MinValue;
 
-		foreach (var cell in this.GetUsedCells(0))
+		foreach (var cell in GetUsedCells(DefaultLayer))
 		{
-			minX = Math.Min(minX, (int) cell.X);
-			minY = Math.Min(minY, (int) cell.Y);
-			maxX = Math.Max(maxX, (int) cell.X);
-			maxY = Math.Max(maxY, (int) cell.Y);
+			minX = Math.Min(minX, cell.X);
+			minY = Math.Min(minY, cell.Y);
+			maxX = Math.Max(maxX, cell.X);
+			maxY = Math.Max(maxY, cell.Y);
 		}
 
-		const int tileSize = 64; // Tile size is 64x64
-		var width = (maxX - minX + 1) * tileSize;
-		var height = (maxY - minY + 1) * tileSize;
+		var width = (maxX - minX + 1) * TileSize;
+		var height = (maxY - minY + 1) * TileSize;
 
-		return new float[]{ width, height };
+		return new Size(width, height);
 	}
 }

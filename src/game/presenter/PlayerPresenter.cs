@@ -1,80 +1,80 @@
-namespace presenter;
+using System;
+using UmaOdisseiaBrasileira.game.Enums;
+using UmaOdisseiaBrasileira.game.model;
+using UmaOdisseiaBrasileira.game.presenter.service;
+using UmaOdisseiaBrasileira.game.presenter.view;
 
-using model;
-using service;
-
+namespace UmaOdisseiaBrasileira.game.presenter;
 
 public class PlayerPresenter
 {
-	private readonly CameraService cameraService;
-	private readonly Player player;
-	private readonly PlayerView view;
+	private readonly ICameraService _cameraService;
+	private readonly Player _player;
+	private readonly IPlayerView _playerView;
 	
-	public PlayerPresenter(CameraService cameraService, Player player, PlayerView view)
+	public PlayerPresenter(ICameraService cameraService, Player player, IPlayerView playerView)
 	{
-		this.cameraService = cameraService;
-		this.player = player;
-		this.view = view;
+		_cameraService = cameraService;
+		_player = player;
+		_playerView = playerView;
 	}
 
 	public void Start()
 	{
-		this.view.OnInput += HandleOnInput;
+		_playerView.OnInput += HandleOnInput;
 	}
 
-	public void HandleOnInput(PlayerView.Input input)
+	private void HandleOnInput(PlayerViewInput input)
 	{
 		switch (input)
 		{
-			case PlayerView.Input.RUN:
+			case PlayerViewInput.Run:
 				ToggleRunWalk();
 				break;
-
-			case PlayerView.Input.UP:
-				HandleMovement(Player.Direction.BACK, PlayerView.Direction.BACK);
+			case PlayerViewInput.Up:
+				HandleMovement(PlayerDirection.Back, PlayerViewDirection.Back);
 				break;
-			case PlayerView.Input.DOWN:
-				HandleMovement(Player.Direction.FRONT, PlayerView.Direction.FRONT);
+			case PlayerViewInput.Down:
+				HandleMovement(PlayerDirection.Front, PlayerViewDirection.Front);
 				break;
-			case PlayerView.Input.LEFT:
-				HandleMovement(Player.Direction.LEFT, PlayerView.Direction.LEFT);
+			case PlayerViewInput.Left:
+				HandleMovement(PlayerDirection.Left, PlayerViewDirection.Left);
 				break;
-			case PlayerView.Input.RIGHT:
-				HandleMovement(Player.Direction.RIGHT, PlayerView.Direction.RIGHT);
+			case PlayerViewInput.Right:
+				HandleMovement(PlayerDirection.Right, PlayerViewDirection.Right);
 				break;
-				
-			case PlayerView.Input.NONE:
-				player.Stop();
-				view.Stop();
+			case PlayerViewInput.None:
+			default:
+				_player.Stop();
+				_playerView.Stop();
 				break;
 		}
 	}
 
 	private void ToggleRunWalk()
 	{
-		if (this.player.IsRunning())
+		if (_player.IsRunning())
 		{
-			this.player.Walk();
+			_player.Walk();
 		}
 		else
 		{
-			this.player.Run();
+			_player.Run();
 		}
 	}
 
-	private void HandleMovement(Player.Direction playerDirection, PlayerView.Direction viewDirection)
+	private void HandleMovement(PlayerDirection playerDirection, PlayerViewDirection viewDirection)
 	{
-		this.player.Turn(playerDirection);
-		if (this.player.IsRunning())
+		_player.Turn(playerDirection);
+		if (_player.IsRunning())
 		{
-			this.view.Run(viewDirection);
+			_playerView.Run(viewDirection);
 		}
 		else
 		{
-			this.view.Walk(viewDirection);
+			_playerView.Walk(viewDirection);
 		}
-		var position = this.view.GetPosition();
-		this.cameraService.UpdatePosition(position[0], position[1]);
+		var position = _playerView.GetPosition();
+		_cameraService.UpdatePosition(position);
 	}
-
 }

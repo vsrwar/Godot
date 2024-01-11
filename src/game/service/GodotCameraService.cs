@@ -1,33 +1,34 @@
 using Godot;
-using service;
+using UmaOdisseiaBrasileira.game.model;
+using UmaOdisseiaBrasileira.game.presenter.service;
 
-public partial class GodotCameraService : Node, CameraService
+namespace UmaOdisseiaBrasileira.game.service;
+
+public partial class GodotCameraService : Node, ICameraService
 {
-
-	private Camera2D camera;
+	private Camera2D _camera;
 
 	public GodotCameraService(Camera2D camera)
 	{
-		this.camera = camera;
+		_camera = camera;
 	}
 
-	public void SetLimits(float LimitRight, float LimitBottom)
+	public void SetLimits(float limitRight, float limitBottom)
 	{
-		if (this.camera != null)
+		if (_camera != null)
 		{
-			this.camera.LimitLeft = 0;
-			this.camera.LimitTop = 0;
-			this.camera.LimitRight = (int) LimitRight;
-			this.camera.LimitBottom = (int) LimitBottom;
+			_camera.LimitLeft = 0;
+			_camera.LimitTop = 0;
+			_camera.LimitRight = (int) limitRight;
+			_camera.LimitBottom = (int) limitBottom;
 		}
 	}
 
-	public void UpdatePosition(float X, float Y)
+	public void UpdatePosition(Position position)
 	{
-		if (this.camera != null)
+		if (_camera != null)
 		{
-			this.camera.GlobalPosition = new Vector2(X, Y);
+			_camera.GlobalPosition = new Vector2(position.X, position.Y);
 		}
 	}
-
 }

@@ -1,7 +1,7 @@
 using NUnit.Framework;
-using model;
+using UmaOdisseiaBrasileira.game.model;
 
-namespace ModelTests
+namespace UmaOdisseiaBrasileira.test.game.model
 {
     public class PlayerTests
     {
