@@ -1,9 +1,9 @@
-using UmaOdisseiaBrasileira.game.model;
+using Godot;
 
 namespace UmaOdisseiaBrasileira.game.presenter.service;
 
 public interface ICameraService
 {
-	void UpdatePosition(Position position);
-	void SetLimits(float limitRight, float limitBottom);
+    void UpdatePosition(Vector2 position);
+    void SetLimits(float limitRight, float limitBottom);
 }

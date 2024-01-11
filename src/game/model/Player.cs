@@ -4,43 +4,47 @@ namespace UmaOdisseiaBrasileira.game.model;
 
 public class Player
 {
-	private string _name;
-	private bool _stopped;
-	private bool _running;
-	private PlayerDirection _direction;
+    public bool Running { get; private set; }
 
-	public Player(string name)
-	{
-		_name = name;
-		_stopped = true;
-		_direction = PlayerDirection.Front;
-	}
+    private string _name;
+    private bool _stopped;
+    private Direction _direction;
 
-	public void Walk()
-	{
-		_stopped = false;
-		_running = false;
-	}
+    public Player(string name)
+    {
+        _name = name;
+        _stopped = true;
+        _direction = Direction.Idle;
+    }
 
-	public void Run()
-	{
-		_stopped = false;
-		_running = true;
-	}
+    public void Walk()
+    {
+        _stopped = false;
+        Running = false;
+    }
 
-	public void Stop()
-	{
-		_stopped = true;
-		_running = false;
-	}
+    public void Run()
+    {
+        _stopped = false;
+        Running = true;
+    }
 
-	public void Turn(PlayerDirection direction)
-	{
-		_direction = direction;
-	}
+    public void Stop()
+    {
+        _stopped = true;
+        Running = false;
+    }
 
-	public bool IsRunning()
-	{
-		return _running;
-	}
+    public void Turn(Direction direction)
+    {
+        _direction = direction;
+    }
+
+    public void ToggleRunWalk()
+    {
+        if (Running)
+            Walk();
+        else
+            Run();
+    }
 }

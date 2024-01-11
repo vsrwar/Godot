@@ -1,9 +1,10 @@
 ﻿namespace UmaOdisseiaBrasileira.game.Enums;
 
-public enum PlayerDirection
+public enum Direction
 {
-    Front,
+    Idle,
     Back,
+    Front,
     Left,
     Right
 }

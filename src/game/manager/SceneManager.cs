@@ -9,25 +9,25 @@ namespace UmaOdisseiaBrasileira.game.manager;
 
 public partial class SceneManager : Node
 {
-	private Player _player;
-	private Map _scene;
-	private IPlayerView _playerView;
-	private IMapView _sceneView;
-	private ICameraService _cameraService;
+    private Player _player;
+    private Map _scene;
+    private IPlayerView _playerView;
+    private IMapView _sceneView;
+    private ICameraService _cameraService;
 
-	public override void _Ready()
-	{
-		var camera = GetNode<Camera2D>("Camera");
-		_cameraService = new GodotCameraService(camera);
+    public override void _Ready()
+    {
+        var camera = GetNode<Camera2D>("Camera");
+        _cameraService = new GodotCameraService(camera);
 
-		_playerView = GetNode<IPlayerView>("Player");
-		_player = new Player("Leandro Vieira");
-		var playerPresenter = new PlayerPresenter(_cameraService, _player, _playerView);
-		playerPresenter.Start();
+        _playerView = GetNode<IPlayerView>("Player");
+        _player = new Player("Leandro Vieira");
+        var playerPresenter = new PlayerPresenter(_cameraService, _player, _playerView);
+        playerPresenter.Start();
 
-		_sceneView = GetNode<IMapView>("Map");
-		_scene = new Map();
-		var scenePresenter = new MapPresenter(_cameraService, _scene, _sceneView);
-		scenePresenter.Start();
-	}
+        _sceneView = GetNode<IMapView>("Map");
+        _scene = new Map();
+        var scenePresenter = new MapPresenter(_cameraService, _scene, _sceneView);
+        scenePresenter.Start();
+    }
 }
